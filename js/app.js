@@ -6,7 +6,7 @@ showNotes();
 
 
 //-----------------------------------------------------------------------------------------//
-//                    If user adds a note, add it to the localStorage                      //
+//                             Adding Note to the localStorage                             //
 //-----------------------------------------------------------------------------------------//
 
 let addBtn = document.getElementById("addBtn");
@@ -27,7 +27,7 @@ addBtn.addEventListener("click", function(e) {
   localStorage.setItem("notes", JSON.stringify(notesObj));
   addTxt.value = "";
   addTitle.value = "";
-//   console.log(notesObj);
+  console.log("Added a New Card");
   showNotes();
 });
 
@@ -46,14 +46,16 @@ function showNotes() {
   let html = "";
   notesObj.forEach(function(element, index) {
     html += `
-            <div class="noteCard my-2 mx-2 card" style="width: 18rem;">
+            <div class="noteCard col-xs-12 col-md-6 col-lg-4">
+                <div id="${index+1}" class="card my-2 mx-2">
                     <div class="card-body">
-                        <h5 class="card-title">${element.title}</h5>
-                        <p class="card-text"> ${element.text}</p>
-                        <button id="${index}"onclick="deleteNote(this.id)" class="btn btn-primary">Delete Note</button>
-                        <button id="star-${index}"onclick="starNote(this.id)" class="btn btn-primary">Star</button>
+                        <h5 id="${index+1}" class="card-title">${element.title}</h5>
+                        <p id="${index+1}" class="card-text"> ${element.text}</p>
+                        <button id="${index+1}" onclick="deleteNote(this.id)" class="btn btn-primary">Delete</button>
+                        <button  id="${index+1}" onclick="starNote(this.id)" class="btn btn-primary">Star</button>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
   });
   let notesElm = document.getElementById("notes");
   if (notesObj.length != 0) {
@@ -65,10 +67,11 @@ function showNotes() {
 
 
 //-----------------------------------------------------------------------------------------//
-//                                Function to delete a note                                //
+//                                     Deleting a Note                                     //
 //-----------------------------------------------------------------------------------------//
 
 function deleteNote(index) {
+  console.log("Deleting Card ID-",index);
   let notes = localStorage.getItem("notes");
   if (notes == null) {
     notesObj = [];
@@ -88,12 +91,10 @@ function deleteNote(index) {
 let search = document.getElementById('searchTxt');
 search.addEventListener("input", function(){
     let inputVal = search.value.toLowerCase();
-    console.log('Input event fired!', inputVal);
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach(function(element){
         let cardTxt = element.getElementsByTagName("h5")[0].innerText.toLowerCase();
         let cardTxtTitle = element.getElementsByTagName("p")[0].innerText.toLowerCase();
-        console.log(cardTxt);
         if(cardTxt.includes(inputVal) || cardTxtTitle.includes(inputVal)){
             element.style.display = "block";
         }
@@ -105,19 +106,22 @@ search.addEventListener("input", function(){
 
 
 //-----------------------------------------------------------------------------------------//
-//                                      Staring Notes                                      //
+//                                     Staring a Notes                                     //
 //-----------------------------------------------------------------------------------------//
 function starNote(index) {
-    let notes = localStorage.getItem("notes");
-    if (notes == null) {
-      notesObj = [];
-    } else {
-      notesObj = JSON.parse(notes);
+    let mycard=document.getElementById(index);
+    if(!mycard.classList.contains("bg-warning")){
+        console.log("Starred Card ID-",index);
+        mycard.classList.add("border-dark");
+        mycard.classList.add("bg-warning");
+        mycard.getElementsByTagName("button")[1].innerText = "Unstar" ;
     }
-    localStorage.setItem("notes", JSON.stringify(notesObj));
-    let mycard = document.getElementById(index);
-    mycard.style.textDecorationColor = white;
-    showNotes();
+    else{
+        console.log("Unstarred Card ID",index);
+        mycard.classList.remove("bg-warning");
+        mycard.classList.remove("border-dark");
+        mycard.getElementsByTagName("button")[1].innerText = "Star";
+    }
   }
 
 
