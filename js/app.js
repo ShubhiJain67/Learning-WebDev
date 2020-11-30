@@ -6,13 +6,36 @@ showNotes();
 
 
 //-----------------------------------------------------------------------------------------//
+//                                    Adding Note popup                                    //
+//-----------------------------------------------------------------------------------------//
+
+addNotePopup = document.getElementById("add-note-popup");
+addNotePopup.addEventListener("click",function(e){
+  // console.log("Add Note Triggered");
+  let addNoteModal = document.getElementById("add-note-modal");
+  addNoteModal.style.display = "block";
+});
+
+
+//-----------------------------------------------------------------------------------------//
+//                                   Closing Note popup                                    //
+//-----------------------------------------------------------------------------------------//
+
+cancelBtn = document.getElementById("cancel-btn");
+cancelBtn.addEventListener("click", function(e){
+  // console.log("Cancel Fired");
+  document.getElementById("add-note-modal").style.display = "none";
+});
+
+
+//-----------------------------------------------------------------------------------------//
 //                             Adding Note to the localStorage                             //
 //-----------------------------------------------------------------------------------------//
 
-let addBtn = document.getElementById("addBtn");
-addBtn.addEventListener("click", function (e) {
-    let addTxt = document.getElementById("addTxt");
-    let addTitle = document.getElementById("addTitle");
+let addNoteBtn = document.getElementById("add-note-btn");
+addNoteBtn.addEventListener("click", function (e) {
+    let addNote = document.getElementById("add-note");
+    let addTitle = document.getElementById("add-title");
     let notes = localStorage.getItem("notes");
     if (notes == null) {
         notesObj = [];
@@ -21,13 +44,14 @@ addBtn.addEventListener("click", function (e) {
     }
     let myObj = {
         title: addTitle.value,
-        text: addTxt.value
+        text: addNote.value
     }
     notesObj.push(myObj);
     localStorage.setItem("notes", JSON.stringify(notesObj));
-    addTxt.value = "";
+    addNote.value = "";
     addTitle.value = "";
-    console.log("Added a New Note");
+    // console.log("Added a New Note");
+    document.getElementById("add-note-modal").style.display = "none";
     showNotes();
 });
 
@@ -49,10 +73,10 @@ function showNotes() {
             <div class="noteCard col-xs-12 col-md-6 col-lg-4">
                 <div id="${index + 1}" class="card my-2 mx-2">
                     <div class="card-body">
-                        <h5 id="${index + 1}" class="card-title">${element.title}</h5>
-                        <p id="${index + 1}" class="card-text"> ${element.text}</p>
-                        <button id="${index + 1}" onclick="deleteNote(this.id)" class="btn btn-primary">Delete</button>
-                        <button  id="${index + 1}" onclick="starNote(this.id)" class="btn btn-primary">Star</button>
+                        <h5 id="title-${index + 1}" class="card-title">${element.title}</h5>
+                        <p id="note-${index + 1}" class="card-text"> ${element.text}</p>
+                        <button id="delete-${index + 1}" onclick="deleteNote(this.id)" class="btn btn-primary">Delete</button>
+                        <button  id="star-${index + 1}" onclick="starNote(this.id)" class="btn btn-primary">Star</button>
                     </div>
                 </div>
             </div>`;
@@ -71,8 +95,8 @@ function showNotes() {
 //-----------------------------------------------------------------------------------------//
 
 function deleteNote(index) {
-    if (confirm("Are you sure you want to delet it?")) {
-        console.log("Deleting Card ID-", index);
+  index = index.substring(index.lastIndexOf("-")+1, index.length);
+    if (confirm("Are you sure you want to delete it?")) {
         let notes = localStorage.getItem("notes");
         if (notes == null) {
             notesObj = [];
@@ -81,6 +105,7 @@ function deleteNote(index) {
         }
         notesObj.splice(index, 1);
         localStorage.setItem("notes", JSON.stringify(notesObj));
+        // console.log("Deleted Card ID-", index);
         showNotes();
     }
 }
@@ -111,15 +136,16 @@ search.addEventListener("input", function () {
 //                                     Staring a Notes                                     //
 //-----------------------------------------------------------------------------------------//
 function starNote(index) {
+  index = index.substring(index.lastIndexOf("-")+1, index.length);
     let mycard = document.getElementById(index);
     if (!mycard.classList.contains("bg-warning")) {
-        console.log("Starred Card ID-", index);
+        // console.log("Starred Card ID-", index);
         mycard.classList.add("border-dark");
         mycard.classList.add("bg-warning");
         mycard.getElementsByTagName("button")[1].innerText = "Unstar";
     }
     else {
-        console.log("Unstarred Card ID", index);
+        // console.log("Unstarred Card ID", index);
         mycard.classList.remove("bg-warning");
         mycard.classList.remove("border-dark");
         mycard.getElementsByTagName("button")[1].innerText = "Star";
@@ -133,3 +159,14 @@ Further Features:
 2. Separate section
 3. Recycle Bin
 */
+let checkListItem = document.getElementsByClassName("check-list-item")[0];
+checkListItem.addEventListener("click",function(e){
+  console.log("Entered");
+   if(checkListItem.classList.contains("checked")){
+     checkListItem.classList.remove("checked");
+     console.log("Removed Checked");
+   }else{
+    checkListItem.classList.add("checked");
+    console.log("Added Checked");
+   }
+});
