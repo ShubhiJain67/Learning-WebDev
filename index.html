@@ -11,15 +11,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/1.1.1/marked.min.js"></script>
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<body style="background-color: #7bdaf3;">
+<body class="bg-background">
 
     <!-- -------------------------------------- NAVIGATION BOX ---------------------------------------- -->
-    <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">MyNotes</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -34,17 +34,15 @@
                 <form class="form-inline my-2 my-lg-0">
                     <input id="searchTxt" class="form-control mr-sm-2" type="search" placeholder="Search"
                         aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    <button id="add-note-popup" class="btn btn-outline-success my-2 my-sm-0 mx-2" type="button">Add New
+                    <button class="btn btn-outline-primary my-2 my-sm-0 mr-sm-2" type="submit">Search</button>
+                    <button id="add-note-popup" class="btn btn-outline-primary my-2 my-sm-0"
+                        onclick="addNotePops()" type="button">Add New
                         Note</button>
                 </form>
             </div>
         </nav>
-    </div>
 
-
-
-
+    <!-- -------------------------------------- ADD NOTE POPUP ---------------------------------------- -->
     <div id="add-note-modal" style="display: none;">
         <div class="container">
             <div class="card bg-light">
@@ -55,144 +53,19 @@
                             placeholder="Enter Title">
                         <textarea class="form-control" id="add-note" rows="3" placeholder="Enter Note"></textarea>
                     </div>
-                    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="add-note-btn">Add Note</button>
-                    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="cancel-btn">Cancel</button>
+                    <button class="btn btn-outline-primary my-2 my-sm-0 mx-2" onclick="addNote()" id="add-note-btn">Add
+                        Note</button>
+                    <button class="btn btn-outline-primary my-2 my-sm-0 mx-2" onclick="closePopup()"
+                        id="cancel-btn">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div>
-        <div class="container" style="display:flex; align-items: center;flex-wrap: wrap;padding: 10px 0px;">
-            
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding-bottom: 20px;">
-                
-                    <div style="background-color: white; border-radius:10px 10px 0px 0px;border: 2px solid grey;">
-                        <div style="float: right;margin: 10px;">
-                            <i class="fa fa-heart btn btn-outline-success"
-                                style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                            <i class="fa fa-trash btn btn-outline-success"
-                                style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                        </div>
-                        <div style="padding: 10px;">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptatem rem debitis
-                                ullam optio sapiente quidem dolor dolores hic labore voluptate impedit blanditiis eaque,
-                                sint sequi distinctio assumenda! Error, exercitationem.</p>
-                        </div>
-                    </div>
-                    <div
-                        style="padding: 5px;border: 2px solid grey;border-top:0px ;height: 45px;border-radius:0px 0px 10px 10px;background-color: rgb(248,249,250);">
-                        <h3>Title</h3>
-                    </div>
-                
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding-bottom: 20px;">
-                
-                <div style="background-color: white; border-radius:10px 10px 0px 0px;border: 2px solid grey;">
-                    <div style="float: right;margin: 10px;">
-                        <i class="fa fa-heart btn btn-outline-success"
-                            style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                        <i class="fa fa-trash btn btn-outline-success"
-                            style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                    </div>
-                    <div style="padding: 10px;">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptatem rem debitis
-                            ullam optio sapiente quidem dolor dolores hic labore voluptate impedit blanditiis eaque,
-                            sint sequi distinctio assumenda! Error, exercitationem.</p>
-                    </div>
-                </div>
-                <div
-                    style="padding: 5px;border: 2px solid grey;border-top:0px ;height: 45px;border-radius:0px 0px 10px 10px;background-color: rgb(248,249,250);">
-                    <h3>Title</h3>
-                </div>
-            
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding-bottom: 20px;">
-                
-            <div style="background-color: white; border-radius:10px 10px 0px 0px;border: 2px solid grey;">
-                <div style="float: right;margin: 10px;">
-                    <i class="fa fa-heart btn btn-outline-success"
-                        style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                    <i class="fa fa-trash btn btn-outline-success"
-                        style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                </div>
-                <div style="padding: 10px;">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptatem rem debitis
-                        ullam optio sapiente quidem dolor dolores hic labore voluptate impedit blanditiis eaque,
-                        sint sequi distinctio assumenda! Error, exercitationem.</p>
-                </div>
-            </div>
-            <div
-                style="padding: 5px;border: 2px solid grey;border-top:0px ;height: 45px;border-radius:0px 0px 10px 10px;background-color: rgb(248,249,250);">
-                <h3>Title</h3>
-            </div>
-        
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding-bottom: 20px;">
-                
-        <div style="background-color: white; border-radius:10px 10px 0px 0px;border: 2px solid grey;">
-            <div style="float: right;margin: 10px;">
-                <i class="fa fa-heart btn btn-outline-success"
-                    style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-                <i class="fa fa-trash btn btn-outline-success"
-                    style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-            </div>
-            <div style="padding: 10px;">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptatem rem debitis
-                    ullam optio sapiente quidem dolor dolores hic labore voluptate impedit blanditiis eaque,
-                    sint sequi distinctio assumenda! Error, exercitationem.</p>
-            </div>
-        </div>
-        <div
-            style="padding: 5px;border: 2px solid grey;border-top:0px ;height: 45px;border-radius:0px 0px 10px 10px;background-color: rgb(248,249,250);">
-            <h3>Title</h3>
-        </div>
-    
-</div>
-<div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding-bottom: 20px;">
-                
-    <div style="background-color: white; border-radius:10px 10px 0px 0px;border: 2px solid grey;">
-        <div style="float: right;margin: 10px;">
-            <i class="fa fa-heart btn btn-outline-success"
-                style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-            <i class="fa fa-trash btn btn-outline-success"
-                style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-        </div>
-        <div style="padding: 10px;">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptatem rem debitis
-                ullam optio sapiente quidem dolor dolores hic labore voluptate impedit blanditiis eaque,
-                sint sequi distinctio assumenda! Error, exercitationem.</p>
-        </div>
-    </div>
-    <div
-        style="padding: 5px;border: 2px solid grey;border-top:0px ;height: 45px;border-radius:0px 0px 10px 10px;background-color: rgb(248,249,250);">
-        <h3>Title</h3>
-    </div>
 
-</div>
-<div class="col-lg-3 col-md-4 col-sm-6 col-xs-6" style="padding-bottom: 20px;">
-                
-    <div style="background-color: white; border-radius:10px 10px 0px 0px;border: 2px solid grey;">
-        <div style="float: right;margin: 10px;">
-            <i class="fa fa-heart btn btn-outline-success"
-                style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-            <i class="fa fa-trash btn btn-outline-success"
-                style="font-size:20px;padding:10px;border-radius: 50%;"></i>
-        </div>
-        <div style="padding: 10px;">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis voluptatem rem debitis
-                ullam optio sapiente quidem dolor dolores hic labore voluptate impedit blanditiis eaque,
-                sint sequi distinctio assumenda! Error, exercitationem.</p>
-        </div>
-    </div>
-    <div
-        style="padding: 5px;border: 2px solid grey;border-top:0px ;height: 45px;border-radius:0px 0px 10px 10px;background-color: rgb(248,249,250);">
-        <h3>Title</h3>
-    </div>
+    <!-- -------------------------------------- NOTES MAIN ---------------------------------------- -->
 
-</div>
-        </div>
-
+    <div id="note-card-container" class="container">
     </div>
 
 
@@ -204,17 +77,17 @@
 
 
 
-        <!-- ----------------------------------------- SCRIPTS ------------------------------------------- -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-            crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-        <script src="script.js"></script>
+    <!-- ----------------------------------------- SCRIPTS ------------------------------------------- -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

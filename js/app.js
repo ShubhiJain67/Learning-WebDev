@@ -1,67 +1,25 @@
 //-----------------------------------------------------------------------------------------//
-//                   To display all the Notes that are added previously                    //
+//                      As soon as page Javascript is loaded on Page                       //
 //-----------------------------------------------------------------------------------------//
 
 showNotes();
 
-
 //-----------------------------------------------------------------------------------------//
-//                                    Adding Note popup                                    //
-//-----------------------------------------------------------------------------------------//
-
-addNotePopup = document.getElementById("add-note-popup");
-addNotePopup.addEventListener("click",function(e){
-  // console.log("Add Note Triggered");
-  let addNoteModal = document.getElementById("add-note-modal");
-  addNoteModal.style.display = "block";
-});
-
-
-//-----------------------------------------------------------------------------------------//
-//                                   Closing Note popup                                    //
+//                                     Add Note Section Popup                              //
 //-----------------------------------------------------------------------------------------//
 
-cancelBtn = document.getElementById("cancel-btn");
-cancelBtn.addEventListener("click", function(e){
-  // console.log("Cancel Fired");
-  document.getElementById("add-note-modal").style.display = "none";
-});
+function addNotePops() {
+    var addNotePopup = document.getElementById("add-note-modal");
+    addNotePopup.style.display = "block";
+}
 
-
-//-----------------------------------------------------------------------------------------//
-//                             Adding Note to the localStorage                             //
-//-----------------------------------------------------------------------------------------//
-
-let addNoteBtn = document.getElementById("add-note-btn");
-addNoteBtn.addEventListener("click", function (e) {
-    let addNote = document.getElementById("add-note");
-    let addTitle = document.getElementById("add-title");
-    let notes = localStorage.getItem("notes");
-    if (notes == null) {
-        notesObj = [];
-    } else {
-        notesObj = JSON.parse(notes);
-    }
-    let myObj = {
-        title: addTitle.value,
-        text: addNote.value
-    }
-    notesObj.push(myObj);
-    localStorage.setItem("notes", JSON.stringify(notesObj));
-    addNote.value = "";
-    addTitle.value = "";
-    // console.log("Added a New Note");
-    document.getElementById("add-note-modal").style.display = "none";
-    showNotes();
-});
-
-
-//-----------------------------------------------------------------------------------------//
-//                      Function to show elements from localStorage                        //
-//-----------------------------------------------------------------------------------------//
+function closePopup() {
+    var addNotePopup = document.getElementById("add-note-modal");
+    addNotePopup.style.display = "none";
+}
 
 function showNotes() {
-    let notes = localStorage.getItem("notes");
+    let notes = localStorage.getItem("note-card-container");
     if (notes == null) {
         notesObj = [];
     } else {
@@ -69,104 +27,121 @@ function showNotes() {
     }
     let html = "";
     notesObj.forEach(function (element, index) {
-        html += `
-            <div class="noteCard col-xs-12 col-md-6 col-lg-4">
-                <div id="${index + 1}" class="card my-2 mx-2">
-                    <div class="card-body">
-                        <h5 id="title-${index + 1}" class="card-title">${element.title}</h5>
-                        <p id="note-${index + 1}" class="card-text"> ${element.text}</p>
-                        <button id="delete-${index + 1}" onclick="deleteNote(this.id)" class="btn btn-primary">Delete</button>
-                        <button  id="star-${index + 1}" onclick="starNote(this.id)" class="btn btn-primary">Star</button>
+        html += `<div id="note-${index}" class="col-lg-3 col-md-4 col-sm-6 col-xs-6 note-card">
+                    <div id="note-card-top-${index}" class="${element.bookmark} note-card-top">
+                        <div class="note-card-content">
+                            <p id="note-note-${index}" class="${element.textColor}">${element.note}</p>
+                        </div>
                     </div>
-                </div>
-            </div>`;
+                    <div id="note-card-bottom-${index}" class="bg-white note-card-bottom">
+                        <div style="float:right;">
+                            <i id="note-b-${index}" onclick="bookmarkCard(this.id)" class="fa ${element.bookmarkIcon} btn btn-outline-primary note-card-icon"></i>
+                            <i id="note-d-${index}" onclick="deleteCard(this.id)" class="fa fa-trash btn btn-outline-primary note-card-icon"></i>
+                        </div>
+                        <div>
+                            <h3 id="note-title-${index}">${element.title}</h3>
+                        </div>
+                    </div>
+                </div> `;
     });
-    let notesElm = document.getElementById("notes");
+    let notesElm = document.getElementById("note-card-container");
     if (notesObj.length != 0) {
         notesElm.innerHTML = html;
     } else {
-        notesElm.innerHTML = `Nothing to show! Use "New Note" section above to add notes.`;
+        notesElm.innerHTML = `<h3 class="blank-notes"> Nothing to show! Use "Add New Note" section above to add notes.</h3>`;
     }
 }
 
 
 //-----------------------------------------------------------------------------------------//
-//                                     Deleting a Note                                     //
+//                                    Adding a Card                                        //
 //-----------------------------------------------------------------------------------------//
 
-function deleteNote(index) {
-  index = index.substring(index.lastIndexOf("-")+1, index.length);
-    if (confirm("Are you sure you want to delete it?")) {
-        let notes = localStorage.getItem("notes");
-        if (notes == null) {
-            notesObj = [];
-        } else {
-            notesObj = JSON.parse(notes);
-        }
-        notesObj.splice(index, 1);
-        localStorage.setItem("notes", JSON.stringify(notesObj));
-        // console.log("Deleted Card ID-", index);
-        showNotes();
+function addNote() {
+    let addNote = document.getElementById("add-note");
+    let addTitle = document.getElementById("add-title");
+    let notes = localStorage.getItem("note-card-container");
+    if (notes == null) {
+        notesObj = [];
+    } else {
+        notesObj = JSON.parse(notes);
     }
+    let myObj = {
+        title: addTitle.value,
+        note: addNote.value,
+        bookmark: "bg-card",
+        bookmarkIcon: "fa-bookmark-o",
+        textColor: "txt-black"
+    }
+    notesObj.push(myObj);
+    localStorage.setItem("note-card-container", JSON.stringify(notesObj));
+    addNote.value = "";
+    addTitle.value = "";
+    // console.log("Added a New Note");
+    document.getElementById("add-note-modal").style.display = "none";
+    showNotes();
 }
 
 
 //-----------------------------------------------------------------------------------------//
-//                                 Searching within Notes                                  //
+//                                    Bookmarking a Card                                   //
 //-----------------------------------------------------------------------------------------//
 
-let search = document.getElementById('searchTxt');
-search.addEventListener("input", function () {
-    let inputVal = search.value.toLowerCase();
-    let noteCards = document.getElementsByClassName('noteCard');
-    Array.from(noteCards).forEach(function (element) {
-        let cardTxt = element.getElementsByTagName("h5")[0].innerText.toLowerCase();
-        let cardTxtTitle = element.getElementsByTagName("p")[0].innerText.toLowerCase();
-        if (cardTxt.includes(inputVal) || cardTxtTitle.includes(inputVal)) {
-            element.style.display = "block";
-        }
-        else {
-            element.style.display = "none";
-        }
-    })
-})
-
-
-//-----------------------------------------------------------------------------------------//
-//                                     Staring a Notes                                     //
-//-----------------------------------------------------------------------------------------//
-function starNote(index) {
-  index = index.substring(index.lastIndexOf("-")+1, index.length);
-    let mycard = document.getElementById(index);
-    if (!mycard.classList.contains("bg-warning")) {
-        // console.log("Starred Card ID-", index);
-        mycard.classList.add("border-dark");
-        mycard.classList.add("bg-warning");
-        mycard.getElementsByTagName("button")[1].innerText = "Unstar";
+function bookmarkCard(id) {
+    var noteCard = document.getElementById(id);
+    let notes = localStorage.getItem("note-card-container");
+    if (notes == null) {
+        notesObj = [];
+    } else {
+        notesObj = JSON.parse(notes);
+    }
+    id = id.substring(id.lastIndexOf("-") + 1);
+    // console.log("Before "+notesObj[id].bookmark+" "+notesObj[id].bookmarkIcon);
+    if (notesObj[id].bookmark == "bg-card") {
+        notesObj[id].bookmark = "bg-card-booked";
+        notesObj[id].bookmarkIcon = "fa-bookmark";
+        notesObj[id].textColor = "txt-white";
+    } else {
+        notesObj[id].bookmark = "bg-card";
+        notesObj[id].bookmarkIcon = "fa-bookmark-o";
+        notesObj[id].textColor = "txt-black";
+    }
+    // console.log("After "+notesObj[id].bookmark+" "+notesObj[id].bookmarkIcon);
+    localStorage.setItem("note-card-container", JSON.stringify(notesObj));
+    showNotes();
+    /* if (noteCard.classList.contains("fa-bookmark-o")) {
+        console.log("Bookmarked", id);
+        noteCard.classList.remove("fa-bookmark-o");
+        noteCard.classList.add("fa-bookmark");
+        document.getElementById("note-card-top"+id.slice(id.lastIndexOf("-"))).classList.remove("bg-card");
+        document.getElementById("note-card-top"+id.slice(id.lastIndexOf("-"))).classList.add("bg-card-booked");
     }
     else {
-        // console.log("Unstarred Card ID", index);
-        mycard.classList.remove("bg-warning");
-        mycard.classList.remove("border-dark");
-        mycard.getElementsByTagName("button")[1].innerText = "Star";
-    }
+        console.log("Unbookmarked", id);
+        noteCard.classList.remove("fa-bookmark");
+        noteCard.classList.add("fa-bookmark-o");
+        document.getElementById("note-card-top"+id.slice(id.lastIndexOf("-"))).classList.remove("bg-card-booked");
+        document.getElementById("note-card-top"+id.slice(id.lastIndexOf("-"))).classList.add("bg-card");
+    // } */
 }
 
 
-/*
-Further Features:
-1. Mark a note as Important
-2. Separate section
-3. Recycle Bin
-*/
-let checkListItem = document.getElementsByClassName("check-list-item")[0];
-checkListItem.addEventListener("click",function(e){
-  console.log("Entered");
-   if(checkListItem.classList.contains("checked")){
-     checkListItem.classList.remove("checked");
-     console.log("Removed Checked");
-   }else{
-    checkListItem.classList.add("checked");
-    console.log("Added Checked");
-   }
-});
+//-----------------------------------------------------------------------------------------//
+//                                    Deleting a Card                                      //
+//-----------------------------------------------------------------------------------------//
+
+function deleteCard(id) {
+    var noteCard = document.getElementById("note" + id.slice(id.lastIndexOf("-")));
+    let notes = localStorage.getItem("note-card-container");
+    if (notes == null) {
+        notesObj = [];
+    } else {
+        notesObj = JSON.parse(notes);
+    }
+    id = id.substring(id.lastIndexOf("-") + 1);
+    notesObj.splice(id, 1);
+    if (confirm("Are you sure you want to delete it?")) {
+        localStorage.setItem("note-card-container", JSON.stringify(notesObj));
+    }
+    showNotes();
+}
