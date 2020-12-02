@@ -19,13 +19,9 @@ function closePopup() {
 }
 
 function showNotes() {
-    let notes = localStorage.getItem("note-card-container");
-    if (notes == null) {
-        notesObj = [];
-    } else {
-        notesObj = JSON.parse(notes);
-    }
-    let html = "";
+    var notes = localStorage.getItem("note-card-container");
+    var notesObj = (notes == null) ? [] : JSON.parse(notes);
+    var html = "";
     notesObj.forEach(function (element, index) {
         html += `<div id="note-${index}" class="col-lg-3 col-md-4 col-sm-6 col-xs-6 note-card">
                     <div id="note-card-top-${index}" class="${element.bookmark} note-card-top">
@@ -44,11 +40,11 @@ function showNotes() {
                     </div>
                 </div> `;
     });
-    let notesElm = document.getElementById("note-card-container");
+    var notesElm = document.getElementById("note-card-container");
     if (notesObj.length != 0) {
         notesElm.innerHTML = html;
     } else {
-        notesElm.innerHTML = `<h3 class="blank-notes"> Nothing to show! Use "Add New Note" section above to add notes.</h3>`;
+        notesElm.innerHTML = `<h3 class="blank-notes"> Nothing to show! Use "<span class="link" onclick="addNotePops()">Add New Note</span>" section above to add notes.</h3>`;
     }
 }
 
@@ -58,15 +54,11 @@ function showNotes() {
 //-----------------------------------------------------------------------------------------//
 
 function addNote() {
-    let addNote = document.getElementById("add-note");
-    let addTitle = document.getElementById("add-title");
-    let notes = localStorage.getItem("note-card-container");
-    if (notes == null) {
-        notesObj = [];
-    } else {
-        notesObj = JSON.parse(notes);
-    }
-    let myObj = {
+    var addNote = document.getElementById("add-note");
+    var addTitle = document.getElementById("add-title");
+    var notes = localStorage.getItem("note-card-container");
+    var notesObj = (notes == null) ? [] : JSON.parse(notes);
+    var myObj = {
         title: addTitle.value,
         note: addNote.value,
         bookmark: "bg-card",
@@ -89,12 +81,8 @@ function addNote() {
 
 function bookmarkCard(id) {
     var noteCard = document.getElementById(id);
-    let notes = localStorage.getItem("note-card-container");
-    if (notes == null) {
-        notesObj = [];
-    } else {
-        notesObj = JSON.parse(notes);
-    }
+    var notes = localStorage.getItem("note-card-container");
+    var notesObj = (notes == null) ? [] : JSON.parse(notes);
     id = id.substring(id.lastIndexOf("-") + 1);
     // console.log("Before "+notesObj[id].bookmark+" "+notesObj[id].bookmarkIcon);
     if (notesObj[id].bookmark == "bg-card") {
@@ -127,21 +115,65 @@ function bookmarkCard(id) {
 
 
 //-----------------------------------------------------------------------------------------//
-//                                    Deleting a Card                                      //
+//                               Deleting + (Undo) a Card                                  //
 //-----------------------------------------------------------------------------------------//
 
+var timer = 0;
+var gid = "";
+
 function deleteCard(id) {
-    var noteCard = document.getElementById("note" + id.slice(id.lastIndexOf("-")));
-    let notes = localStorage.getItem("note-card-container");
-    if (notes == null) {
-        notesObj = [];
-    } else {
-        notesObj = JSON.parse(notes);
-    }
     id = id.substring(id.lastIndexOf("-") + 1);
-    notesObj.splice(id, 1);
+    gid = id;
     if (confirm("Are you sure you want to delete it?")) {
-        localStorage.setItem("note-card-container", JSON.stringify(notesObj));
+        document.getElementById("note-" + id).style.display = "none";
+        document.getElementById("undo").style.display = "block";
+        timer = window.setTimeout(deleteCardPermanently, 5000);
     }
+}
+
+function undo() {
+    document.getElementById("note-" + gid).style.display = "block";
+    document.getElementById("undo").style.display = "none";
+    window.clearTimeout(timer);
+}
+
+function deleteCardPermanently() {
+    var notes = localStorage.getItem("note-card-container");
+    var notesObj = (notes == null) ? [] : JSON.parse(notes);
+    notesObj.splice(gid, 1);
+    localStorage.setItem("note-card-container", JSON.stringify(notesObj));
+    document.getElementById("undo").style.display = "none";
     showNotes();
 }
+
+
+//-----------------------------------------------------------------------------------------//
+//                                    Draggable Card                                       //
+//-----------------------------------------------------------------------------------------//
+
+// $('.draggable').draggable({
+//     scroll: true,
+//     scrollSensitivity: 40,
+//     scrollSpeed: 40
+// });
+
+
+//-----------------------------------------------------------------------------------------//
+//                                    Search Function                                      //
+//-----------------------------------------------------------------------------------------//
+
+let search = document.getElementById("searchTxt");
+search.addEventListener("input",function(){
+    let inputValue = search.value.toLowerCase();
+    let notes=document.getElementsByClassName("note-card");
+    Array.from(notes).forEach(function(element){
+        let cardText = element.getElementsByTagName("p")[0].innerText.toLowerCase();
+        let cardTitle = element.getElementsByTagName("h3")[0].innerText.toLowerCase();
+        if(cardText.includes(inputValue) || cardTitle.includes(inputValue)){
+            element.style.display="block";
+        }else{
+            element.style.display="none";
+        }
+    })
+
+})
